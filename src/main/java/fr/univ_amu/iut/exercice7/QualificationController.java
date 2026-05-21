@@ -1,6 +1,7 @@
 package fr.univ_amu.iut.exercice7;
 
 import java.time.LocalTime;
+import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.util.Duration;
 
 /**
  * Contrôleur de la pierre angulaire MVC (parcours P3 - vérification d'une nuit de capture par
@@ -80,7 +82,12 @@ public class QualificationController {
               if (nouveau == null) {
                 labelSelection.setText("(sélectionnez une séquence dans le tableau)");
               } else {
-                labelLecture.setText("Séquence <horodatage> - <freq> kHz");
+                // Mettre à jour le labelSelection avec les vraies valeurs
+                String texte =
+                    String.format(
+                        "Séquence %s - %.1f kHz",
+                        nouveau.getHorodatage(), nouveau.getFrequenceDominanteKHz());
+                labelSelection.setText(texte);
               }
             });
     labelSelection.setText("(sélectionnez une séquence dans le tableau)");
@@ -109,7 +116,7 @@ public class QualificationController {
         .bind(
             Bindings.when(nuit.verdictGlobalProperty().isEmpty())
                 .then("Verdict global : (à saisir)")
-                .otherwise("Verdict global : <verdict>"));
+                .otherwise(Bindings.concat("Verdict global : ", nuit.verdictGlobalProperty())));
     // TODO exercice 7 (étape 6) : lier la TextArea de commentaire au modèle
     // (binding
     // bidirectionnel).
@@ -124,6 +131,14 @@ public class QualificationController {
     // afficher "Lecture en cours..." dans labelLecture. Ce texte doit s'effacer
     // après 600 ms
     // (PauseTransition + setOnFinished(...)).
+    tableView.getSelectionModel().getSelectedItem().setStatut("Écoutée");
+    labelLecture.setText("Lecture en cours...");
+    PauseTransition pause = new PauseTransition(Duration.millis(600));
+    pause.setOnFinished(
+        e -> {
+          labelLecture.setText("");
+        });
+    pause.play();
   }
 
   /** Action du bouton « Enregistrer le verdict ». Écrit le verdict choisi dans le modèle. */
@@ -133,6 +148,10 @@ public class QualificationController {
     // dans le
     // modèle via nuit.setVerdictGlobal(...). Ne rien faire si aucun verdict n'est
     // sélectionné.
+    String verdict = choiceBoxVerdict.getValue();
+    if (verdict != null) {
+      nuit.setVerdictGlobal(verdict);
+    }
   }
 
   /** Exposé pour les tests : permet de vérifier l'état du modèle après actions sur la vue. */
