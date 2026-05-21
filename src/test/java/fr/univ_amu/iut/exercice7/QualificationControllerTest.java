@@ -55,7 +55,7 @@ class QualificationControllerTest {
     return robot.lookup("#choiceBoxVerdict").queryAs(ChoiceBox.class);
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
+  // @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(1)
   void le_tableview_est_alimente_par_les_sequences_de_la_nuit(FxRobot robot) {
@@ -68,7 +68,7 @@ class QualificationControllerTest {
         .hasSize(10);
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
+  // @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(2)
   void le_panneau_de_detail_invite_a_selectionner_une_sequence_au_demarrage(FxRobot robot) {
@@ -78,7 +78,7 @@ class QualificationControllerTest {
         .isEqualTo("(sélectionnez une séquence dans le tableau)");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
+  // @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(3)
   void le_bouton_ecouter_est_desactive_sans_selection_dans_le_tableau(FxRobot robot) {
